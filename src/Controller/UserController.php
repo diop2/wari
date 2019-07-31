@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Entreprise;
-use App\Controller\UserController;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,6 +20,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class UserController extends AbstractController
 {
     /**
+     * Ajoue user(partenaire ou entreprise)
      * @Route("/register", name="register", methods={"POST"})
      * 
      */
@@ -61,7 +61,7 @@ class UserController extends AbstractController
         }
         $data = [
             'status' => 500,
-            'message' => 'Vous devez renseigner les clés username et password'
+            'message' => 'utilisateur non ajouter'
         ];
         return new JsonResponse($data, 500);
     }
