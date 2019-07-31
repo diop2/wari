@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20190731091329 extends AbstractMigration
+final class Version20190731095942 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -22,9 +22,9 @@ final class Version20190731091329 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE versement ADD user_id INT DEFAULT NULL, ADD iduser INT NOT NULL');
-        $this->addSql('ALTER TABLE versement ADD CONSTRAINT FK_716E9367A76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
-        $this->addSql('CREATE INDEX IDX_716E9367A76ED395 ON versement (user_id)');
+        $this->addSql('ALTER TABLE versement ADD versement_user_id INT DEFAULT NULL');
+        $this->addSql('ALTER TABLE versement ADD CONSTRAINT FK_716E9367216450BE FOREIGN KEY (versement_user_id) REFERENCES user (id)');
+        $this->addSql('CREATE INDEX IDX_716E9367216450BE ON versement (versement_user_id)');
     }
 
     public function down(Schema $schema) : void
@@ -32,8 +32,8 @@ final class Version20190731091329 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE versement DROP FOREIGN KEY FK_716E9367A76ED395');
-        $this->addSql('DROP INDEX IDX_716E9367A76ED395 ON versement');
-        $this->addSql('ALTER TABLE versement DROP user_id, DROP iduser');
+        $this->addSql('ALTER TABLE versement DROP FOREIGN KEY FK_716E9367216450BE');
+        $this->addSql('DROP INDEX IDX_716E9367216450BE ON versement');
+        $this->addSql('ALTER TABLE versement DROP versement_user_id');
     }
 }

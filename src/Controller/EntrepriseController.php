@@ -20,7 +20,7 @@ class EntrepriseController extends AbstractController
     {
         $values = json_decode($request->getContent());
 
-            $entreprise = new entreprise();
+            $entreprise = new Entreprise();
 
             $entreprise->setNom($values->nom);
             $entreprise->setLINEA($values->linea);                                                                                                                                                                                                                      
@@ -38,7 +38,7 @@ class EntrepriseController extends AbstractController
 
             $data = [
                 'status' => 201,
-                'message' => 'utilisateur ajouter'
+                'message' => 'Donnes Entreprise ajouter'
             ];
 
             return new JsonResponse($data, 201);

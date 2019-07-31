@@ -71,15 +71,14 @@ class User implements UserInterface
     private $isActive;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Versement", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\Versement", mappedBy="versementUser")
      */
-    private $Userversement;
+    private $versementUser;
 
     public function __construct()
     {
-        
         $this->versements = new ArrayCollection();
-        $this->Userversement = new ArrayCollection();
+        $this->versementUser = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -266,28 +265,28 @@ class User implements UserInterface
     /**
      * @return Collection|Versement[]
      */
-    public function getUserversement(): Collection
+    public function getVersementUser(): Collection
     {
-        return $this->Userversement;
+        return $this->versementUser;
     }
 
-    public function addUserversement(Versement $userversement): self
+    public function addVersementUser(Versement $versementUser): self
     {
-        if (!$this->Userversement->contains($userversement)) {
-            $this->Userversement[] = $userversement;
-            $userversement->setUser($this);
+        if (!$this->versementUser->contains($versementUser)) {
+            $this->versementUser[] = $versementUser;
+            $versementUser->setVersementUser($this);
         }
 
         return $this;
     }
 
-    public function removeUserversement(Versement $userversement): self
+    public function removeVersementUser(Versement $versementUser): self
     {
-        if ($this->Userversement->contains($userversement)) {
-            $this->Userversement->removeElement($userversement);
+        if ($this->versementUser->contains($versementUser)) {
+            $this->versementUser->removeElement($versementUser);
             // set the owning side to null (unless already changed)
-            if ($userversement->getUser() === $this) {
-                $userversement->setUser(null);
+            if ($versementUser->getVersementUser() === $this) {
+                $versementUser->setVersementUser(null);
             }
         }
 

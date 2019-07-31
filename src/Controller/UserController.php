@@ -4,15 +4,14 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Entreprise;
+
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
-
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -20,7 +19,6 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class UserController extends AbstractController
 {
     /**
-     * Ajoue user(partenaire ou entreprise)
      * @Route("/register", name="register", methods={"POST"})
      * 
      */
@@ -61,7 +59,7 @@ class UserController extends AbstractController
         }
         $data = [
             'status' => 500,
-            'message' => 'utilisateur non ajouter'
+            'message' => 'Vous devez renseigner les clés username et password'
         ];
         return new JsonResponse($data, 500);
     }
