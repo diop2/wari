@@ -44,6 +44,11 @@ class Versement
      */
     private $caissier;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="versementUser")
+     */
+    private $versementUser;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -105,6 +110,18 @@ class Versement
     public function setCaissier(?User $caissier): self
     {
         $this->caissier = $caissier;
+
+        return $this;
+    }
+
+    public function getVersementUser(): ?User
+    {
+        return $this->versementUser;
+    }
+
+    public function setVersementUser(?User $versementUser): self
+    {
+        $this->versementUser = $versementUser;
 
         return $this;
     }

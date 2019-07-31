@@ -70,9 +70,15 @@ class User implements UserInterface
      */
     private $isActive;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Versement", mappedBy="versementUser")
+     */
+    private $versementUser;
+
     public function __construct()
     {
         $this->versements = new ArrayCollection();
+        $this->versementUser = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -252,6 +258,37 @@ class User implements UserInterface
     public function setIsActive(bool $isActive): self
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Versement[]
+     */
+    public function getVersementUser(): Collection
+    {
+        return $this->versementUser;
+    }
+
+    public function addVersementUser(Versement $versementUser): self
+    {
+        if (!$this->versementUser->contains($versementUser)) {
+            $this->versementUser[] = $versementUser;
+            $versementUser->setVersementUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVersementUser(Versement $versementUser): self
+    {
+        if ($this->versementUser->contains($versementUser)) {
+            $this->versementUser->removeElement($versementUser);
+            // set the owning side to null (unless already changed)
+            if ($versementUser->getVersementUser() === $this) {
+                $versementUser->setVersementUser(null);
+            }
+        }
 
         return $this;
     }
