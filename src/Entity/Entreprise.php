@@ -50,6 +50,31 @@ class Entreprise
      */
     private $users;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $nomComplet;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $NCI;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $Tel;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $Adresse;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $NumeroCompte;
+
     public function __construct()
     {
         $this->versements = new ArrayCollection();
@@ -167,6 +192,66 @@ class Entreprise
                 $user->setEntreprise(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getNomComplet(): ?string
+    {
+        return $this->nomComplet;
+    }
+
+    public function setNomComplet(string $nomComplet): self
+    {
+        $this->nomComplet = $nomComplet;
+
+        return $this;
+    }
+
+    public function getNCI(): ?int
+    {
+        return $this->NCI;
+    }
+
+    public function setNCI(int $NCI): self
+    {
+        $this->NCI = $NCI;
+
+        return $this;
+    }
+
+    public function getTel(): ?int
+    {
+        return $this->Tel;
+    }
+
+    public function setTel(int $Tel): self
+    {
+        $this->Tel = $Tel;
+
+        return $this;
+    }
+
+    public function getAdresse(): ?string
+    {
+        return $this->Adresse;
+    }
+
+    public function setAdresse(string $Adresse): self
+    {
+        $this->Adresse = $Adresse;
+
+        return $this;
+    }
+
+    public function getNumeroCompte(): ?int
+    {
+        return $this->NumeroCompte;
+    }
+
+    public function setNumeroCompte(?int $NumeroCompte): self
+    {
+        $this->NumeroCompte = $NumeroCompte;
 
         return $this;
     }

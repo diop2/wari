@@ -19,9 +19,9 @@ class Versement
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer")
      */
-    private $type;
+    private $NumeroCompte;
 
     /**
      * @ORM\Column(type="integer")
@@ -54,14 +54,14 @@ class Versement
         return $this->id;
     }
 
-    public function getType(): ?string
+    public function getNumeroCompte(): ?int
     {
-        return $this->type;
+        return $this->NumeroCompte;
     }
 
-    public function setType(string $type): self
+    public function setNumeroCompte(int $NumeroCompte): self
     {
-        $this->type = $type;
+        $this->NumeroCompte = $NumeroCompte;
 
         return $this;
     }

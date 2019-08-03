@@ -3,8 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Entity\Entreprise;
+use App\Entity\Versement;
 
+use App\Entity\Entreprise;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,21 +27,44 @@ class UserController extends AbstractController
     public function register( Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager, SerializerInterface $serializer, ValidatorInterface $validator)
     {
         $values = json_decode($request->getContent());
-        if(isset($values->email,$values->password)) {
+        if(isset($values->email , $values->password)) {
+
+           
+
             $user = new User();
-            $repository = $this->getDoctrine()->getRepository(Entreprise::class);
-            $entreprise=$repository->find($values->entreprise_id);
-            $user->setEntreprise($entreprise);
+            
             $user->setEmail($values->email);
-            $user->setRoles($user->getRoles());
+            $user->setRoles($values->roles);
             $user->setPassword($passwordEncoder->encodePassword($user, $values->password));
             $user->setNomComplet($values->nomComplet);
             $user->setAdresse($values->adresse);
             $user->setNci($values->nci);
             $user->setTel($values->tel);
             $user->setIsActive($values->isActive);
+
+            $entreprise = new Entreprise();
+
+            $entreprise->setNom($values->nom);
+            $entreprise->setAdresse($values->adresse);
+            $entreprise->setTel($values->tel);
+            $entreprise->setNci($values->nci);
+            $entreprise->setNomComplet($values->nomComplet);
+            $entreprise->setLINEA($values->linea);                                                    
+            $entreprise->setRaisonSocial($values->raisonsocial);
+            $entreprise->setSolde($values->solde);
+
+            $user->setEntreprise($entreprise);  
             
-            
+            $versement = new Versement;
+           
+            $versement->setNumeroCompte($values->numerocompte);
+            $versement->setSolde($values->solde);
+            $versement->setDateversement(new \DateTime('now'));
+
+            $versement->setEntreprise($entreprise);
+            $versement->setCaissier($user);
+            $versement->setVersementUser($user);
+           
             $errors = $validator->validate($user);
             if(count($errors)) {
                 $errors = $serializer->serialize($errors, 'json');
@@ -48,12 +72,23 @@ class UserController extends AbstractController
                     'Content-Type' => 'application/json'
                 ]);
             }
+
+            $errors = $validator->validate($entreprise);
+            if(count($errors)) {
+                $errors = $serializer->serialize($errors, 'json');
+                return new Response($errors, 500, [
+                    'Content-Type' => 'application/json'
+                ]);
+            }
+            
             $entityManager->persist($user);
+            $entityManager->persist($entreprise);
+            $entityManager->persist($versement);                                                                             
             $entityManager->flush();
 
             $data = [
                 'status' => 201,
-                'message' => 'utilisateur ajouter'
+                'message' => 'nouveau partenaire creer'
             ];
 
             return new JsonResponse($data, 201);

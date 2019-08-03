@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controller;
-namespace App\Controller;
+
 use App\Entity\User;
 use App\Entity\Versement;
 use App\Entity\Entreprise;
@@ -18,45 +18,58 @@ use Symfony\Component\Validator\Constraints\DateTime;
 class VersementController extends AbstractController
 {
     /**
-     * @Route("/versement", name="versement")
+     * @Route("/versement", name="versement",  methods={"GET"})
      */
-    public function register( Request $request,EntityManagerInterface $entityManager, SerializerInterface $serializer, ValidatorInterface $validator)
+    public function versement ( Request $request,EntityManagerInterface $entityManager, SerializerInterface $serializer, ValidatorInterface $validator)
     {
         $values = json_decode($request->getContent());
 
-            $versement = new Versement;
-            $repository = $this->getDoctrine()->getRepository(Entreprise::class);
-            $entreprise=$repository->find($values->entreprise_id);
-            $versement->setEntreprise($entreprise);
-            $repository = $this->getDoctrine()->getRepository(user::class);
-            $ver=$repository->find($values->caissier_id);
-            $versement->setCaissier($ver);
-            $versement->setType($values->type);
-            $versement->setSolde($values->solde);                                                                                                                                                                                                                      
-            $versement->setDateversement(new \DateTime('now'));
-            $repository = $this->getDoctrine()->getRepository(User::class);
-            $entreprise=$repository->find($values->versementuser_id);
-            $versement->setVersementuser($entreprise);
-            $errors = $validator->validate($versement);
-            if(count($errors)) {
-                $errors = $serializer->serialize($errors, 'json');
-                return new Response($errors, 500, [
-                    'Content-Type' => 'application/json'
-                ]);
-            }
-            $entityManager->persist($versement);
-            $entityManager->flush();
+        if (isset($values->NumeroCompte, /* $values->Caissier, */ $values->solde)) {
+                if($values->solde>75000 &&  $values->NumeroCompte>0 /* && (entreprise!='' || $user !='') */) {
+                    
+                    $versement = new Versement();
+                    
+                    $versement->setNumeroCompte($values->NumeroCompte);
+                    $versement->setSolde($values->solde);
+                    $versement->setDateversement(new \DateTime('now'));
 
-            $data = [
-                'status' => 201,
-                'message' => 'Vesement effectuer'
-            ];
+                    $identreprise=$this->getDoctrine()->getRepository(Entreprise::class)->find($values->entreprise_id);
+                    $versement->setEntreprise($identreprise);
+                   
+                    $identreprise->setSolde($identreprise->getSolde()+$values->solde);
 
-            return new JsonResponse($data, 201);
+                    $entityManager->persist($versement);
+                    $entityManager->flush();
+                    
+                    $errors = $validator->validate($versement);
+                    if(count($errors)) {
+                        $errors = $serializer->serialize($errors, 'json');
+                        return new Response($errors, 500, [
+                            'Content-Type' => 'application/json'
+                        ]);
+                    }
+                    
+
+                    $data = [
+                        'status' => 200,
+                        'message' => 'Vesement effectuer'
+                    ];
+
+                    return new JsonResponse($data, 200);
+                }
+                        else {
+                            $data = [
+                                'status' => 201,
+                                'message' => 'Versement inferieur a 75000'
+                            ];
         
+                            return new JsonResponse($data, 201);
+                        }
+                       
+        }
         $data = [
-            'status' => 500,
-            'message' => 'versement nom effectuer'
+           
+            'message' => 'numero compte n\'existe pas'
         ];
         return new JsonResponse($data, 500);
     }
